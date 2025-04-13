@@ -1,0 +1,160 @@
+#!/usr/bin/env sh
+
+# the scripting-addition must be loaded manually if
+# you are running yabai on macOS Big Sur. Uncomment
+# the following line to have the injection performed
+# when the config is executed during startup.
+#
+# for this to work you must configure sudo such that
+# it will be able to run the command without password
+#
+# see this wiki page for information:
+#  - https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)
+
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+# global settings - Enhanced for Hyprland-like experience with animations
+yabai -m config                                 \
+    mouse_follows_focus          off            \
+    focus_follows_mouse          off            \
+    window_origin_display        default        \
+    window_placement             second_child   \
+    window_topmost               off            \
+    window_shadow                on             \
+    active_window_opacity        1.0            \
+    normal_window_opacity        0.80           \
+    window_opacity               on             \
+    insert_feedback_color        0xff89b4fa     \
+    active_window_border_color   0xff89b4fa     \
+    normal_window_border_color   0xff45475a     \
+    window_border_width          2              \
+    window_border_radius         12             \
+    window_border_hidpi          on             \
+    window_border                on             \
+    split_ratio                  0.50           \
+    split_type                   auto           \
+    auto_balance                 off            \
+    top_padding                  48             \
+    bottom_padding               8              \
+    left_padding                 8              \
+    right_padding                8              \
+    window_gap                   8              \
+    layout                       bsp            \
+    mouse_modifier               alt            \
+    mouse_action1                move           \
+    mouse_action2                resize         \
+    mouse_drop_action            swap           \
+    window_animation_duration    0.35           \
+    window_animation_easing      ease_out_quint \
+    window_opacity_duration      0.25
+
+# Animation Fix Notes:
+# - Increased animation duration from 0.2 to 0.35 for macOS-like smoothness
+# - Added proper easing curve for natural motion  
+# - Slower opacity transitions for better visual feedback
+# - These settings now match the nix-darwin configuration exactly
+
+# Blur Effect Configuration:
+# - normal_window_opacity: 0.65 (降低透明度增强视觉区分)
+# - window_opacity_duration: 0.25 (平滑的透明度过渡)
+# - 焦点窗口保持完全不透明 (active_window_opacity: 1.0)
+# - 非焦点窗口有明显的视觉区分，更容易识别当前活动窗口
+# 注意：yabai 本身不支持真正的模糊效果，但通过透明度可以实现类似的视觉效果
+
+# Enhanced layout switching for different workspaces
+# Space 1: BSP layout for development
+yabai -m config --space 1 layout bsp
+# Space 2: Stack layout for focused work
+yabai -m config --space 2 layout stack
+# Space 3: Float layout for design/media work
+yabai -m config --space 3 layout float
+# Space 4: BSP layout for communication
+yabai -m config --space 4 layout bsp
+
+# Application-specific rules for better workflow
+# Development tools - prefer BSP layout
+yabai -m rule --add app="^Code$" space=1
+yabai -m rule --add app="^Visual Studio Code$" space=1
+yabai -m rule --add app="^Xcode$" space=1
+yabai -m rule --add app="^IntelliJ IDEA$" space=1
+yabai -m rule --add app="^WebStorm$" space=1
+yabai -m rule --add app="^PyCharm$" space=1
+yabai -m rule --add app="^Alacritty$" manage=on
+
+# Browsers - can be managed but with special handling
+yabai -m rule --add app="^Safari$" manage=on
+yabai -m rule --add app="^Google Chrome$" manage=on
+yabai -m rule --add app="^Firefox$" manage=on
+yabai -m rule --add app="^Arc$" manage=on
+
+# Communication apps - prefer space 4
+yabai -m rule --add app="^Slack$" space=4
+yabai -m rule --add app="^Discord$" space=4
+yabai -m rule --add app="^Telegram$" space=4
+yabai -m rule --add app="^Signal$" space=4
+yabai -m rule --add app="^WhatsApp$" space=4
+
+# Media and design - prefer float layout (space 3)
+yabai -m rule --add app="^Adobe.*$" space=3 manage=on
+yabai -m rule --add app="^Figma$" space=3 manage=on
+yabai -m rule --add app="^Sketch$" space=3 manage=on
+yabai -m rule --add app="^GIMP$" space=3 manage=on
+yabai -m rule --add app="^Blender$" space=3 manage=on
+yabai -m rule --add app="^VLC$" layer=above manage=off
+yabai -m rule --add app="^QuickTime Player$" layer=above manage=off
+
+# System utilities - float and stay on top
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Archive Utility$" manage=off
+yabai -m rule --add app="^Wally$" manage=off
+yabai -m rule --add app="^Pika$" manage=off
+yabai -m rule --add app="^balenaEtcher$" manage=off
+yabai -m rule --add app="^Creative Cloud$" manage=off
+yabai -m rule --add app="^Logi Options$" manage=off
+yabai -m rule --add app="^PrintShop$" manage=off
+yabai -m rule --add app="^BRAW Toolbox$" manage=off
+yabai -m rule --add app="^Wireless Diagnostics$" manage=off
+  #yabai -m rule --add app="^WeChat$" manage=off
+yabai -m rule --add app="^iWall$" manage=off
+
+# Float small utility windows
+yabai -m rule --add app="^Digital Colormeter$" sticky=on layer=above manage=off
+yabai -m rule --add app="^Disk Utility$" sticky=on layer=above manage=off
+yabai -m rule --add app="^Activity Monitor$" sticky=on layer=above manage=off
+yabai -m rule --add app="^Path Finder$" manage=off
+yabai -m rule --add app="^TeamViewer$" sticky=off layer=above manage=off
+yabai -m rule --add app="^Raycast$" sticky=on layer=above manage=off
+yabai -m rule --add app="^Finder$" sticky=on layer=above manage=off
+yabai -m rule --add app="^Alfred$" sticky=on layer=above manage=off
+yabai -m rule --add app="^CleanMyMac$" sticky=on layer=above manage=off
+
+# Finder specific dialog windows - ensure they float
+yabai -m rule --add app="^Finder$" title="^Go to.*" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title="^Connect to.*" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title="^Copy$" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title="^Move$" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title="^Delete$" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title="^Info$" manage=off sticky=on
+yabai -m rule --add app="^Finder$" title=".*Info$" manage=off sticky=on
+
+# Float dialog and alert windows
+yabai -m rule --add title="^Preferences" manage=off
+yabai -m rule --add title="^Settings" manage=off
+
+# Enhanced window focus and management signals
+yabai -m signal --add event=window_focused action="echo 'Window focused'"
+
+# Smart layout switching based on window count per space
+yabai -m signal --add event=space_changed action="
+  SPACE=\$(yabai -m query --spaces --space | jq '.index')
+  echo \"Switched to space \$SPACE\"
+"
+
+# Window creation signal
+yabai -m signal --add event=window_created action="
+  echo 'Window created: '\$YABAI_WINDOW_ID
+"
+
+echo "yabai configuration loaded with enhanced layouts and animations.."

@@ -1,0 +1,116 @@
+# ================================================================
+# SKHD HOTKEY DAEMON CONFIGURATION FILE
+# ================================================================
+
+# Navigation
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south  
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
+
+# Moving windows
+shift + alt - h : yabai -m window --warp west
+shift + alt - j : yabai -m window --warp south
+shift + alt - k : yabai -m window --warp north
+shift + alt - l : yabai -m window --warp east
+
+# Move focus container to workspace
+shift + alt - 1 : yabai -m window --space 1
+shift + alt - 2 : yabai -m window --space 2
+shift + alt - 3 : yabai -m window --space 3
+shift + alt - 4 : yabai -m window --space 4
+shift + alt - 5 : yabai -m window --space 5
+shift + alt - 6 : yabai -m window --space 6
+shift + alt - 7 : yabai -m window --space 7
+shift + alt - 8 : yabai -m window --space 8
+shift + alt - 9 : yabai -m window --space 9
+shift + alt - 0 : yabai -m window --space 10
+
+# Resize windows
+lctrl + alt - h : yabai -m window --resize left:-50:0; \
+                  yabai -m window --resize right:-50:0
+lctrl + alt - j : yabai -m window --resize bottom:0:50; \
+                  yabai -m window --resize top:0:50
+lctrl + alt - k : yabai -m window --resize top:0:-50; \
+                  yabai -m window --resize bottom:0:-50
+lctrl + alt - l : yabai -m window --resize right:50:0; \
+                  yabai -m window --resize left:50:0
+
+# Equalize size of windows
+lctrl + alt - e : yabai -m space --balance
+
+# Rotate windows clockwise and anticlockwise
+alt - r         : yabai -m space --rotate 270
+shift + alt - r : yabai -m space --rotate 90
+
+# Rotate on X and Y Axis
+shift + alt - x : yabai -m space --mirror x-axis
+shift + alt - y : yabai -m space --mirror y-axis
+
+# Set insertion point for focused container
+shift + lctrl + alt - h : yabai -m window --insert west
+shift + lctrl + alt - j : yabai -m window --insert south
+shift + lctrl + alt - k : yabai -m window --insert north
+shift + lctrl + alt - l : yabai -m window --insert east
+
+# Float / Unfloat window
+shift + alt - space : yabai -m window --toggle float
+
+# Restart Yabai
+shift + lctrl + alt - r : \
+    /usr/bin/env osascript <<< \
+        "display notification \"Restarting Yabai\" with title \"Yabai\""; \
+    launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
+
+# Make window native fullscreen
+alt - f         : yabai -m window --toggle zoom-fullscreen
+shift + alt - f : yabai -m window --toggle native-fullscreen
+
+# toggle window split type
+alt - e : yabai -m window --toggle split
+
+# toggle sticky (show on all spaces)
+alt - s : yabai -m window --toggle sticky
+
+# toggle topmost (keep above other windows)
+alt - o : yabai -m window --toggle topmost
+
+# toggle picture-in-picture
+alt - p : yabai -m window --toggle border && \
+          yabai -m window --toggle pip
+
+# change layout of desktop
+lctrl + alt - a : yabai -m space --layout bsp
+lctrl + alt - d : yabai -m space --layout float
+lctrl + alt - s : yabai -m space --layout stack
+
+# Close window
+alt - q : yabai -m window --close
+
+# Workspace management
+# Create new desktop/space
+shift + alt - d : yabai -m space --create && \
+                  index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && \
+                  yabai -m space --focus "${index}"
+
+# Switch to specific workspace/space (alt + 1,2,3...)
+alt - 1 : yabai -m space --focus 1
+alt - 2 : yabai -m space --focus 2
+alt - 3 : yabai -m space --focus 3
+alt - 4 : yabai -m space --focus 4
+alt - 5 : yabai -m space --focus 5
+alt - 6 : yabai -m space --focus 6
+alt - 7 : yabai -m space --focus 7
+alt - 8 : yabai -m space --focus 8
+alt - 9 : yabai -m space --focus 9
+alt - 0 : yabai -m space --focus 10
+
+# Applications
+alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
+shift + alt - return : open -n /Applications/WezTerm.app
+
+# Global utilities
+alt - w : /usr/bin/osascript -e 'tell application "Finder" to activate' -e 'delay 0.2' -e 'tell application "System Events" to keystroke "g" using {command down, shift down}' # Finder Go To Folder script
+
+# cmd - space : 系统原生 Spotlight 快捷键，不被 skhd 拦截
+# alt - space : open -n /Applications/Raycast.app  # DISABLED: Replaced with Spotlight

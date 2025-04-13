@@ -1,0 +1,25 @@
+alt - left: yabai -m window --focus west
+alt - right: yabai -m window --focus east
+alt - up: yabai -m window --focus north
+alt - down: yabai -m window --focus south
+
+# lalt + lctrl - left: yabai -m window --warp west
+# lalt + lctrl - right: yabai -m window --warp east
+# lalt + lctrl - up: yabai -m window --warp north
+# lalt + lctrl - down: yabai -m window --warp south
+
+lalt + shift - left: yabai -m window --swap west
+lalt + shift - right: yabai -m window --swap east
+lalt + shift - up: yabai -m window --swap north
+lalt + shift - down: yabai -m window --swap south
+
+lalt + lctrl - left: yabai -m window --resize left:-20:0; yabai -m window --resize right:-20:0
+lalt + lctrl - right: yabai -m window --resize right:20:0; yabai -m window --resize left:20:0
+lalt + lctrl - up: yabai -m window --resize top:0:-20; yabai -m window --resize bottom:0:-20
+lalt + lctrl - down: yabai -m window --resize bottom:0:20; yabai -m window --resize top:0:20
+
+lalt - e: yabai -m space --balance
+
+lalt - space: yabai -m window --toggle float
+lalt - f: yabai -m window --toggle zoom-fullscreen
+lalt + shift - f: yabai -m window --toggle native-fullscreen

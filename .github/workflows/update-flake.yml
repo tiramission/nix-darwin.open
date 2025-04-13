@@ -1,0 +1,35 @@
+name: Update Nix Flake
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # 每天凌晨2点自动运行
+
+jobs:
+  update-flake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update flake.lock
+        run: nix run nixpkgs#just u
+
+      - name: Commit and push changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          if ! git diff --quiet flake.lock; then
+            git add flake.lock
+            git commit -m 'chore: update flake.lock via GitHub Actions'
+            git push
+          else
+            echo "No changes to commit."
+          fi
